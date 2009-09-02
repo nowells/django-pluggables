@@ -21,10 +21,11 @@ class PluggableURLNode(Node):
         request = self.request.resolve(context)
         if hasattr(request, 'pluggable'):
             view_name = request.pluggable.prefix and '%s_%s' % (request.pluggable.prefix, self.view_name) or '%s' % self.view_name
-            if request.pluggable.base_args:
-                args = request.pluggable.base_args + args
-            if request.pluggable.base_kwargs:
-                kwargs.update(request.pluggable.base_kwargs)
+            parent_args, parent_kwargs = request.pluggable.parent_arguments
+            if parent_args:
+                args = parent_args + args
+            if parent_kwargs:
+                kwargs.update(parent_kwargs)
 
         # Try to look up the URL twice: once given the view name, and again
         # relative to what we guess is the "main" app. If they both fail,

@@ -1,0 +1,4 @@
+pip==0.3.1
+-e hg+http://bitbucket.org/ned/coveragepy/@483a54854358#egg=coverage
+-e svn+http://code.djangoproject.com/svn/django/tags/releases/1.1#egg=django
+-e hg+http://bitbucket.org/birkenfeld/sphinx#egg=sphinx
