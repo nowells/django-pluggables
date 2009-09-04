@@ -1,12 +1,10 @@
-from django.conf.urls.defaults import url, include, patterns, handler404, handler500
-import pluggables
+from pluggables import Pluggable, url, include, patterns
 
-class Comments(pluggables.Pluggable):
-    urlpatterns = pluggables.patterns('',
-        pluggables.url(r'^$', 'django.views.generic.simple.direct_to_template', {'template': 'test.html'}),
+class Complaints(Pluggable):
+    urlpatterns = patterns('',
+        url(r'^$', 'django.views.generic.simple.direct_to_template', {'template': 'complaints/index.html'}),
+        url(r'^create/$', 'django.views.generic.simple.direct_to_template', {'template': 'complaints/edit.html'}),
+        url(r'^(?P<complaint_id>/edit/$', 'django.views.generic.simple.direct_to_template', {'template': 'complaints/edit.html'}),
     )
 
-urlpatterns = patterns('',
-    url('^$', 'django.views.generic.simple.direct_to_template', {'template': 'index.html'}),
-    url('^(?P<name>\w+)/test/', include(Comments())),
-)
+urlpatterns = Complaints()
