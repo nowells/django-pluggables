@@ -14,3 +14,19 @@ DATABASE_PASSWORD = ''
 DATABASE_HOST = ''
 DATABASE_PORT = ''
 DATABASE_OPTIONS = {}
+
+MEDIA_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'media'))
+
+SITE_SERVER_URL = 'http://127.0.0.1:8000'
+MEDIA_SERVER_URL = SITE_SERVER_URL
+SITE_RELATIVE_URL = '/'
+MEDIA_RELATIVE_URL = '%smedia/' % SITE_RELATIVE_URL
+SITE_URL = '%s%s' % (SITE_SERVER_URL, SITE_RELATIVE_URL)
+MEDIA_URL = '%s%s' % (MEDIA_SERVER_URL, MEDIA_RELATIVE_URL)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.auth',
+    'django.core.context_processors.media',
+)
