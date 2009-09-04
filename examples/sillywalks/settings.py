@@ -15,8 +15,8 @@ DATABASE_HOST = ''
 DATABASE_PORT = ''
 DATABASE_OPTIONS = {}
 
+ADMIN_MEDIA_PREFIX = '/django-admin-media/'
 MEDIA_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'media'))
-
 SITE_SERVER_URL = 'http://127.0.0.1:8000'
 MEDIA_SERVER_URL = SITE_SERVER_URL
 SITE_RELATIVE_URL = '/'

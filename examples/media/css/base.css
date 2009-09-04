@@ -1,0 +1,16 @@
+a:link {
+    color: #043f78;
+    text-decoration: none;
+}
+a:visited {
+    color: #043f78;
+    text-decoration: none;
+}
+a:hover {
+    color: #3d7cb8;
+}
+
+body {
+    background: #789ec9 url(../img/eyeshoot1.jpg) repeat-x;
+    line-height: 1.4;
+}

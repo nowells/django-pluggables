@@ -3,3 +3,5 @@
 \#*#
 *.pyc
 docs/_build/
+ve/
+examples/db/.database.db
