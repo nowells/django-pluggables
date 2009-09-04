@@ -2,6 +2,7 @@ DEBUG = True
 ROOT_URLCONF = 'sillywalks.urls'
 INSTALLED_APPS = (
     'complaints',
+    'pluggables',
     'sillywalks',
     'django.contrib.auth',
     'django.contrib.admin',

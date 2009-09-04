@@ -7,7 +7,10 @@ from complaints.models import Complaint
 from pluggables import pluggable_reverse
 
 def index(request):
+    form = ComplaintForm()
     return render_to_response('complaints/index.html', {
+        'form': form,
+        'base_template': request.pluggable.config.get('base_template', 'base.html'),
         }, context_instance=RequestContext(request))
 
 def edit(request, complaint_id=None):

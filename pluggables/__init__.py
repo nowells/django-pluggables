@@ -32,7 +32,7 @@ def include(*args, **kwargs):
 def pluggable_view(func, pluggable):
     @wraps(func)
     def view_wrapper(request, *args, **kwargs):
-        request.pluggable = PluggableView(pluggable, request, *args, **kwargs)
+        request.pluggable = PluggableViewWrapper(pluggable, request, *args, **kwargs)
         pluggable_args, pluggable_kwargs = request.pluggable.pluggable_arguments
         return func(request, *pluggable_args, **pluggable_kwargs)
     return view_wrapper
@@ -40,7 +40,7 @@ def pluggable_view(func, pluggable):
 def pluggable_placeholder(*args, **kwargs):
     raise Http404
 
-class PluggableView(object):
+class PluggableViewWrapper(object):
     def __init__(self, pluggable_object, request, *args, **kwargs):
         # Public Data
         self.config = {}

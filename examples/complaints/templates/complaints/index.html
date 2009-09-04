@@ -1,5 +1,24 @@
 {% extends base_template %}
 
+{% load pluggables %}
+
 {% block pluggable_content %}
 
+<h3>Complaints</h3>
+<ul>
+{% for complain in complaints %}
+    <li>
+        {{ complaint.description }}
+        <p>
+            <a href="{% pluggable_url complaint_edit complaint_id %}">Edit</a>
+        </p>
+    </li>
+{% endfor %}
+</ul>
+
+<form action="{% pluggable_url complaints_create %}" method="post">
+    <h4> Create a Complaint</h4>
+    {{ form.as_p }}
+    <input type="submit" value="Complain" />
+</form>
 {% endblock %}
