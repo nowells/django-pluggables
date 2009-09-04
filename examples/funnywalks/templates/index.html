@@ -31,21 +31,6 @@
     
     {% endblock %}
     {% block js %}
-        {% block js.shared %}
-            <!--[if IE]><script src="{{ MEDIA_URL }}js/excanvas/excanvas-compressed.js?{{ MEDIA_VERSION }}" type="text/javascript" charset="utf-8"></script><![endif]-->
-            <!--[if lte IE 6]>
-                <script src="{{ MEDIA_URL }}js/jquery/supersleight.plugin.js?{{ MEDIA_VERSION }}" type="text/javascript" charset="utf-8"></script>
-                <script type="text/javascript" charset="utf-8">
-                  /* <![CDATA[ */
-                    $(function() {
-                        $('#hd, #left_sidebar, .more_link, .filter, .icon, .activities, #extra, #ft, #profile_actions').supersleight({shim: '{{ MEDIA_URL }}img/x.gif'});
-                        $('.icon, img, li').parent().supersleight({shim: '{{ MEDIA_URL }}img/x.gif'});
-                    });
-                  /* ]]> */
-                </script>
-            <![endif]-->
-        {% endblock js.shared %}
-        {% block js.custom %}{% endblock js.custom %}
     {% endblock js%}
 </body>
 </html>
