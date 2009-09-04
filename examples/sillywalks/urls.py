@@ -1,18 +1,19 @@
 from django.conf import settings
 from django.conf.urls.defaults import url, include, patterns, handler404, handler500
+from django.contrib import admin
 
-from complaints.urls import Complaints
+from sillywalks import views
 
-class SillyWalkComplaints(Complaints):
-    def get_config(self, request, walk_name=None):
-        return {
-            'base_template': 'base.html'
-            }
+admin.autodiscover()
 
 urlpatterns = patterns('',
     url('^sillywalks/$', 'django.views.generic.simple.direct_to_template', {'template': 'index.html'}),
-    url('^sillywalks/(?P<walk_name>\w+)/$', 'django.views.generic.simple.direct_to_template', {'template': 'view.html'}),
-    url('^sillywalks/(?P<walk_name>\w+)/complaints/', include(SillyWalkComplaints())),
+    url('^sillywalks/(?P<walk_name>[\w\-_]+)/$', views.view),
+    url('^sillywalks/(?P<walk_name>[\w\-_]+)/complaints/', include(views.complaints)),
+)
+
+urlpatterns += patterns('',
+    url('^django-admin/', include(admin.site.urls)),
 )
 
 if settings.DEBUG:

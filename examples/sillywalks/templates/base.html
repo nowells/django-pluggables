@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+{% block head %}
+    <head>
+        {% block meta %}
+            <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+            <meta http-equiv="content-language" content="en-us" />
+            <meta http-equiv="imagetoolbar" content="false" />
+            <meta name="robots" content="{% block meta_robots %}index,follow{% endblock %}" />
+            <meta name="description" content="{% block meta.description %}{% endblock meta.description %}" />
+            <meta name="keywords" content="{% block meta.keywords %}{% endblock meta.keywords %}" />
+            <meta name="MSSmartTagsPreventParsing" content="true" />
+        {% endblock meta %}
+
+        {% block head.icon %}
+            <link rel="icon" type="image/png" href="" />
+        {% endblock head.icon %}
+
+        <title>{% block title %}{% endblock title %} : Sillywalks</title>
+
+        {% block js.head %}{% endblock %}
+
+        {% block css %}
+            <link rel="stylesheet" href="{{ MEDIA_URL }}css/base.css" type="text/css" />
+        {% endblock css%}
+    </head>
+{% endblock head %}
+
+<body>
+    {% block body_content %}
+    {% endblock %}
+
+    {% block js %}
+    {% endblock js%}
+</body>
+</html>

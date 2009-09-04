@@ -3,13 +3,17 @@ ROOT_URLCONF = 'sillywalks.urls'
 INSTALLED_APPS = (
     'complaints',
     'sillywalks',
+    'django.contrib.auth',
+    'django.contrib.admin',
+    'django.contrib.sessions',
+    'django.contrib.contenttypes',
 )
 
 import os
 import shutil
 db_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'db'))
 DATABASE_NAME = os.path.join(db_root, '.database.db')
-if not os.path.exists(DATABASE_NAME):
+if not os.path.exists(DATABASE_NAME) and os.path.exists(os.path.join(db_root, 'database.db')):
     shutil.copyfile(os.path.join(db_root, 'database.db'), DATABASE_NAME)
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_USER = ''
@@ -32,4 +36,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',
     'django.core.context_processors.auth',
     'django.core.context_processors.media',
+    'pluggables.pluggable_context_processor',
+)
+
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
 )

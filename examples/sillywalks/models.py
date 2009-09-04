@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib import admin
 
 class SillyWalk(models.Model):
     name = models.SlugField(unique=True)
@@ -7,3 +8,5 @@ class SillyWalk(models.Model):
 
     def __unicode__(self):
         return self.name
+
+admin.site.register(SillyWalk)
