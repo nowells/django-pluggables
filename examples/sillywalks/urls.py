@@ -4,7 +4,7 @@ from django.conf.urls.defaults import url, include, patterns, handler404, handle
 from complaints.urls import Complaints
 
 class SillyWalkComplaints(Complaints):
-    def get_config(self, walk_name=None):
+    def get_config(self, request, walk_name=None):
         return {
             'base_template': 'base.html'
             }
