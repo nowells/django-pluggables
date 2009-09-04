@@ -1,4 +1,4 @@
-###################
+gi###################
  Django-Pluggables
 ###################
 A design pattern for making reusable apps "pluggable".
@@ -34,20 +34,20 @@ To set up the relationship between these two apps, it is necessary to define two
 
 .. note::
 
-    In the following examples we will use two imaginary apps: ``funnywalks`` and ``complaints``. These would be imported in your modules like so::
+    In the following examples we will use two imaginary apps: ``sillywalks`` and ``complaints``. These would be imported in your modules like so::
 
-        from funnywalks.models import Walk
+        from sillywalks.models import Walk
         from complaints.models import Complaint
 
-    In the examples we discuss below, the ``funnywalks`` app lives at the URL::
+    In the examples we discuss below, the ``sillywalks`` app lives at the URL::
 
-        http://example.com/funnywalks/
+        http://example.com/sillywalks/
 
-    The ``funnywalks`` app utilizes the ``complaints`` app to field complaints about various types of walk. To provide an excellent user experience, the ``complaints`` forms and functionality should be presented at a URL beneath the ``funnywalks`` URL::
+    The ``sillywalks`` app utilizes the ``complaints`` app to field complaints about various types of walk. To provide an excellent user experience, the ``complaints`` forms and functionality should be presented at a URL beneath the ``sillywalks`` URL::
 
-        http://example.com/funnywalks/<walk_name>/complaints/
+        http://example.com/sillywalks/<walk_name>/complaints/
 
-    Also, the presentation of ``complaints`` functionality beneath the ``funnywalks`` app should adhere to the ``funnywalks`` templates pattern, including various walk-specific information that must be supplied through additional, non- ``complaints`` app context.
+    Also, the presentation of ``complaints`` functionality beneath the ``sillywalks`` app should adhere to the ``sillywalks`` templates pattern, including various walk-specific information that must be supplied through additional, non- ``complaints`` app context.
 
 Defining the URLconf
 --------------------
@@ -67,25 +67,25 @@ In order to make the ``complaints`` app pluggable, we first must define a plugga
 Defining the Pluggable Config and Context
 -----------------------------------------
 
-Once the ``complaints`` app has been set up with the pluggable URLs, it is necessary to define the context that will be delivered to the ``complaints`` app and add these URLs to the URLconf for the ``funnywalks`` app::
+Once the ``complaints`` app has been set up with the pluggable URLs, it is necessary to define the context that will be delivered to the ``complaints`` app and add these URLs to the URLconf for the ``sillywalks`` app::
 
     from complaints.urls import ComplaintsPluggable
 
-    class FunnyWalkComplaints(ComplaintsPluggable):
+    class SillyWalkComplaints(ComplaintsPluggable):
         def get_view_context(self, request, complaint_id):
             return {
                 'complaint_id': complaint_id,
             }
         def get_template_context(self, request, slug):
             return {
-                'funny_walk': FunnyWalk.objects.get(slug=slug),
+                'silly_walk': SillyWalk.objects.get(slug=slug),
             }
         def get_config(self):
             return {
-                'base_template': 'funnywalks/base.html',
+                'base_template': 'sillywalks/base.html',
             }
 
-    urlpatterns = FunnyWalkComplaints('funnywalk')
+    urlpatterns = SillyWalkComplaints('sillywalk')
 
 More
 ====
