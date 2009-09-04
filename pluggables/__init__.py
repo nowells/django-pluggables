@@ -18,6 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import resolve, reverse, RegexURLPattern, get_callable, get_mod_func
 from django.core.exceptions import ViewDoesNotExist
 from django.http import Http404
+from django.db import models
 
 def patterns(*args):
     return args
@@ -67,6 +68,14 @@ class PluggableView(object):
     @property
     def parent_arguments(self):
         return self.__parent_args, self.__parent_kwargs
+
+    @property
+    def pluggable_url_data(self):
+        return {
+            'prefix': self.prefix,
+            'parent_args': self.__parent_args,
+            'parent_kwargs': self.__parent_kwargs,
+            }
 
 class Pluggable(object):
     urlpatterns = patterns('', )
@@ -139,7 +148,7 @@ def pluggable_reverse(request, view_name, urlconf=None, args=None, kwargs=None, 
 
     if hasattr(request, 'pluggable'):
         view_name = request.pluggable.prefix and '%s_%s' % (request.pluggable.prefix, view_name) or '%s' % view_name
-        parent_args, parent_kwargs = request.pluggable.parent_arguments()
+        parent_args, parent_kwargs = request.pluggable.parent_arguments
         if parent_args:
             args = parent_args + args
 
@@ -147,3 +156,29 @@ def pluggable_reverse(request, view_name, urlconf=None, args=None, kwargs=None, 
             kwargs.update(parent_kwargs)
 
     return reverse(view_name, urlconf, args, kwargs, prefix)
+
+def permalink(func):
+    """
+    Decorator that calls urlresolvers.reverse() to return a URL using
+    parameters returned by the decorated function "func".
+
+    "func" should be a function that returns a tuple in one of the
+    following formats:
+        (viewname, viewargs)
+        (viewname, viewargs, viewkwargs)
+    """
+    from django.core.urlresolvers import reverse
+    def inner(self, *args, **kwargs):
+        bits = func(self, *args, **kwargs)
+        if isinstance(self.pluggable_url, dict):
+            view_name_prefix = self.pluggable_url.get('prefix', '')
+            view_name = '%s%s' % (view_name_prefix and ('%s_' % view_name_prefix) or '', bits[0])
+            parent_args = self.pluggable_url.get('parent_args', [])
+            parent_kwargs = self.pluggable_url.get('parent_kwargs', {})
+            if len(bits) >= 2 and bits[1]:
+                parent_args = parent_args + bits[1]
+            if len(bits) >= 3 and bits[2]:
+                parent_kwargs.update(bits[2])
+            bits = [view_name, parent_args, parent_kwargs]
+        return reverse(bits[0], None, *bits[1:3])
+    return inner

@@ -1,6 +1,7 @@
 from django.db import models
+from pluggables.models import PluggableModel
 
-class Complaint(models.Model):
+class Complaint(PluggableModel):
     description = models.TextField()
 
     def __unicode__(self):
