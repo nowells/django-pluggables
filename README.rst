@@ -1,7 +1,7 @@
-###########################################################
-# Django-Pluggables
-# A design pattern for making reusable apps "pluggable".
-###########################################################
+###################
+ Django-Pluggables
+###################
+A design pattern for making reusable apps "pluggable".
 
 Overview
 ========
