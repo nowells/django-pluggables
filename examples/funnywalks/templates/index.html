@@ -1,1 +1,51 @@
-Homepage
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+{% block head %}
+    <head>
+        {% block meta %}
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="content-language" content="en-us" />
+        <meta http-equiv="imagetoolbar" content="false" />
+        <meta name="robots" content="{% block meta_robots %}index,follow{% endblock %}" />
+        <meta name="description" content="{% block meta.description %}{% endblock meta.description %}" />
+        <meta name="keywords" content="{% block meta.keywords %}{% endblock meta.keywords %}" />
+        <meta name="MSSmartTagsPreventParsing" content="true" />
+        {% endblock meta %}
+
+        {% block head.icon %}
+        <link rel="icon" type="image/png" href="" />
+        {% endblock head.icon %}
+
+        <title>{% block title %}{% endblock title %} : Funnywalks</title>
+
+        {% block js.head %}{% endblock %}
+
+        {% block css %}
+            <link rel="stylesheet" href="/media/css/base.css" type="text/css" />
+        {% endblock css%}
+    </head>
+{% endblock head %}
+
+<body>
+    {% block content %}
+    
+    {% endblock %}
+    {% block js %}
+        {% block js.shared %}
+            <!--[if IE]><script src="{{ MEDIA_URL }}js/excanvas/excanvas-compressed.js?{{ MEDIA_VERSION }}" type="text/javascript" charset="utf-8"></script><![endif]-->
+            <!--[if lte IE 6]>
+                <script src="{{ MEDIA_URL }}js/jquery/supersleight.plugin.js?{{ MEDIA_VERSION }}" type="text/javascript" charset="utf-8"></script>
+                <script type="text/javascript" charset="utf-8">
+                  /* <![CDATA[ */
+                    $(function() {
+                        $('#hd, #left_sidebar, .more_link, .filter, .icon, .activities, #extra, #ft, #profile_actions').supersleight({shim: '{{ MEDIA_URL }}img/x.gif'});
+                        $('.icon, img, li').parent().supersleight({shim: '{{ MEDIA_URL }}img/x.gif'});
+                    });
+                  /* ]]> */
+                </script>
+            <![endif]-->
+        {% endblock js.shared %}
+        {% block js.custom %}{% endblock js.custom %}
+    {% endblock js%}
+</body>
+</html>
