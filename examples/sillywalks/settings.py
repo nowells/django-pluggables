@@ -6,8 +6,11 @@ INSTALLED_APPS = (
 )
 
 import os
-DB_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'db'))
-DATABASE_NAME = os.path.join(DB_ROOT, 'database.db')
+import shutil
+db_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'db'))
+DATABASE_NAME = os.path.join(db_root, '.database.db')
+if not os.path.exists(DATABASE_NAME):
+    shutil.copyfile(os.path.join(db_root, 'database.db'), DATABASE_NAME)
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_USER = ''
 DATABASE_PASSWORD = ''
