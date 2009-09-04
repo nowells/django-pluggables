@@ -3,15 +3,16 @@ from django.conf.urls.defaults import url, include, patterns, handler404, handle
 
 from complaints.urls import Complaints
 
-class FunnyWalkComplaints(Complaints):
-    def get_config(self, funnywalk_id=None):
+class SillyWalkComplaints(Complaints):
+    def get_config(self, walk_name=None):
         return {
             'base_template': 'base.html'
             }
 
 urlpatterns = patterns('',
-    url('^$', 'django.views.generic.simple.direct_to_template', {'template': 'index.html'}),
-    url('^(?P<funnywalk_id>\d+)/complaints/', include(FunnyWalkComplaints())),
+    url('^sillywalks/$', 'django.views.generic.simple.direct_to_template', {'template': 'index.html'}),
+    url('^sillywalks/(?P<walk_name>\w+)/$', 'django.views.generic.simple.direct_to_template', {'template': 'view.html'}),
+    url('^sillywalks/(?P<walk_name>\w+)/complaints/', include(SillyWalkComplaints())),
 )
 
 if settings.DEBUG:

@@ -1,8 +1,8 @@
 DEBUG = True
-ROOT_URLCONF = 'funnywalks.urls'
+ROOT_URLCONF = 'sillywalks.urls'
 INSTALLED_APPS = (
     'complaints',
-    'funnywalks',
+    'sillywalks',
 )
 
 import os

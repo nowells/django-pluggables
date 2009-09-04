@@ -47,5 +47,5 @@ def bootstrap():
 def documentation():
     local("rm -Rf docs/modules/")
     local("rm -Rf docs/_build/html/")
-    local("DJANGO_SETTINGS_MODULE=funnywalks.settings ve/bin/sphinx-build -aE docs/ docs/_build/html/")
+    local("DJANGO_SETTINGS_MODULE=sillywalks.settings ve/bin/sphinx-build -aE docs/ docs/_build/html/")
     print "View the documentation here: file://%s" % os.path.join(PROJECT_ROOT, 'docs', '_build', 'html', 'index.html')

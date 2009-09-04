@@ -1,6 +1,6 @@
 from django.db import models
 
-class FunnyWalk(models.Model):
+class SillyWalk(models.Model):
     description = models.TextField()
     video_url = models.URLField()
 
