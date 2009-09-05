@@ -6,11 +6,11 @@
 
 <h3>Complaints</h3>
 <ul>
-{% for complain in complaints %}
+{% for complaint in complaints %}
     <li>
         {{ complaint.description }}
         <p>
-            <a href="{% pluggable_url complaint_edit complaint_id %}">Edit</a>
+            <a href="{% pluggable_url complaints_edit complaint_id=complaint.id %}">Edit</a>
         </p>
     </li>
 {% endfor %}

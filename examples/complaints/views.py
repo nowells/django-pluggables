@@ -15,8 +15,10 @@ class Complaints(PluggableViews):
     )
 
     def index(self, request):
+        complaints = Complaint.objects.pluggable(request)
         form = ComplaintForm()
         return render_to_response(request.pluggable.config.get('template', 'complaints/index.html'), {
+            'complaints': complaints,
             'form': form,
             'base_template': request.pluggable.config.get('base_template', 'base.html'),
             }, context_instance=RequestContext(request))
@@ -36,7 +38,7 @@ class Complaints(PluggableViews):
                 complaint = form.save(commit=False)
                 complaint.set_pluggable_url(request)
                 complaint.save()
-                return HttpResponseRedirect(pluggable_reverse(request, 'complaints_edit', kwargs={'complaint_id': complaint.id}))
+                return HttpResponseRedirect(pluggable_reverse(request, 'complaints_index'))
         else:
             form = ComplaintForm(instance=complaint)
 
