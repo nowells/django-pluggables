@@ -34,6 +34,10 @@
                 <h1>The Ministry of <em>Silly Walks</em></h1>
                 <hr />
                 {% block body_content %}
+                    <div class=item_container>
+                        {% block pluggable_content %}
+                        {% endblock %}
+                    </div>
                 {% endblock %}
             </div>
         </div>

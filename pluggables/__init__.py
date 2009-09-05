@@ -42,6 +42,7 @@ def pluggable_class_view(func, pluggable):
     @wraps(func)
     def class_view_wrapper(request, *args, **kwargs):
         request.pluggable = PluggableViewWrapper(pluggable, request, *args, **kwargs)
+        request.pluggable.pluggable_initialize(request)
         pluggable_args, pluggable_kwargs = request.pluggable.pluggable_arguments
         return func(request, *pluggable_args, **pluggable_kwargs)
     class_view_wrapper.pluggable_unique_identifier = pluggable.pluggable_unique_identifier
@@ -76,10 +77,11 @@ class PluggableViewWrapper(object):
         self.__pluggable_args = list(args[len(self.__parent_args):])
         self.__pluggable_kwargs = dict([ (x[0], x[1]) for x in kwargs.items() if x[0] not in self.__parent_kwargs ])
 
-        # Generate the pluggable config/context
+    def pluggable_initialize(self, request):
+        # We seperate this out into its own function call so that each step has access to "request.pluggable" and the prior generated context.
+        self.config = self.__pluggable_object.pluggable_config(request, *self.__parent_args, **self.__parent_kwargs)
         self.view_context = self.__pluggable_object.pluggable_view_context(request, *self.__parent_args, **self.__parent_kwargs)
         self.template_context = self.__pluggable_object.pluggable_template_context(request, *self.__parent_args, **self.__parent_kwargs)
-        self.config = self.__pluggable_object.pluggable_config(request, *self.__parent_args, **self.__parent_kwargs)
 
     @property
     def pluggable_arguments(self):

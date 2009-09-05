@@ -16,18 +16,17 @@ def view(request, walk_name):
     return complaints.index(request, walk_name=walk_name)
 
 class SillyWalkComplaints(Complaints):
-    def pluggable_template_context(self, request, walk_name):
+    def pluggable_config(self, request, walk_name=None):
+        return {'base_template': 'view.html'}
+
+    def pluggable_view_context(self, request, walk_name):
         try:
             sillywalk = SillyWalk.objects.get(name=walk_name)
         except SillyWalk.DoesNotExist:
             raise Http404
-        return {
-            'sillywalk': sillywalk
-            }
+        return sillywalk
 
-    def pluggable_config(self, request, walk_name=None):
-        return {
-            'base_template': 'view.html'
-            }
+    def pluggable_template_context(self, request, walk_name):
+        return {'sillywalk': request.pluggable.view_context}
 
 complaints = SillyWalkComplaints('sillywalks')
