@@ -53,7 +53,7 @@ Defining the URLconf
 --------------------
 In order to make the ``complaints`` app pluggable, we first must define a pluggable URLs file for it::
 
-    class ComplaintsPluggable(Pluggable):
+    class ComplaintsPluggable(PluggableViews):
         urlpatterns = patterns('',
             url(r'^$', 'complaints.views.view_complaint', name='complaints_view_complaint'),
             url(r'^activity_feed/$', 'complaints.views.submit_complaint', name='complaints_submit_complaint'),
@@ -72,18 +72,14 @@ Once the ``complaints`` app has been set up with the pluggable URLs, it is neces
     from complaints.urls import ComplaintsPluggable
 
     class SillyWalkComplaints(ComplaintsPluggable):
-        def get_view_context(self, request, complaint_id):
-            return {
-                'complaint_id': complaint_id,
-            }
-        def get_template_context(self, request, slug):
-            return {
-                'silly_walk': SillyWalk.objects.get(slug=slug),
-            }
-        def get_config(self):
-            return {
-                'base_template': 'sillywalks/base.html',
-            }
+        def pluggable_view_context(self, request, complaint_id):
+            return dict(complaint_id=complaint_id)
+
+        def pluggable_template_context(self, request, slug):
+            return dict(silly_walk=SillyWalk.objects.get(slug=slug))
+
+        def pluggable_config(self):
+            return dict(base_template='sillywalks/base.html')
 
     urlpatterns = SillyWalkComplaints('sillywalk')
 
