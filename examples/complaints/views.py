@@ -16,7 +16,7 @@ class Complaints(PluggableViews):
 
     def index(self, request):
         form = ComplaintForm()
-        return render_to_response('complaints/index.html', {
+        return render_to_response(request.pluggable.config.get('template', 'complaints/index.html'), {
             'form': form,
             'base_template': request.pluggable.config.get('base_template', 'base.html'),
             }, context_instance=RequestContext(request))
@@ -40,7 +40,7 @@ class Complaints(PluggableViews):
         else:
             form = ComplaintForm(instance=complaint)
 
-        return render_to_response('complaints/edit.html', {
+        return render_to_response(request.pluggable.config.get('template', 'complaints/edit.html'), {
             'form': form,
             'base_template': request.pluggable.config.get('base_template', 'base.html'),
             }, context_instance=RequestContext(request))
