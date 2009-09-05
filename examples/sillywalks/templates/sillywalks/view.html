@@ -1,6 +1,7 @@
-{% extends "base.html" %}
+{% extends "sillywalks/base.html" %}
 
 {% block body_content %}
+    {{ block.super }}
     <div class=item_container>
         <h2>{{ sillywalk.name }}</h2>
         <p>{{ sillywalk.description|safe }}</p>

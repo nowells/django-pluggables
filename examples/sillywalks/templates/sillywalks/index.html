@@ -1,0 +1,13 @@
+{% extends "sillywalks/base.html" %}
+
+{% block body_content %}
+    {{ block.super }}
+    {% for sillywalk in sillywalks %}
+        <div class=item_container>
+            <h2><a href="{% url sillywalks_view sillywalk.name %}">{{ sillywalk.name }}</a></h2>
+            <p>{{ sillywalk.description|safe }}</p>
+        </div>
+    {% empty %}
+       <div class="item_container">No silly walks available!</div>
+    {% endfor %}
+{% endblock %}

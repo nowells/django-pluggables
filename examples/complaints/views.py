@@ -12,6 +12,7 @@ class Complaints(PluggableViews):
         url(r'^$', 'index', name='complaints_index'),
         url(r'^create/$', 'edit', name='complaints_create'),
         url(r'^(?P<complaint_id>\d+)/edit/$', 'edit', name='complaints_edit'),
+        url(r'^(?P<complaint_id>\d+)/delete/$', 'delete', name='complaints_delete'),
     )
 
     def index(self, request):
@@ -46,3 +47,14 @@ class Complaints(PluggableViews):
             'form': form,
             'base_template': request.pluggable.config.get('base_template', 'base.html'),
             }, context_instance=RequestContext(request))
+
+    def delete(self, request, complaint_id):
+        try:
+            complaint = Complaint.objects.pluggable(request).get(pk=complaint_id)
+        except Complaint.DoesNotExist:
+            raise Http404
+
+        complaint.delete()
+
+        return HttpResponseRedirect(pluggable_reverse(request, 'complaints_index'))
+

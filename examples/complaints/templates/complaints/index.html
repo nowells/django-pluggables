@@ -10,7 +10,8 @@
     <li>
         {{ complaint.description }}
         <p>
-            <a href="{% pluggable_url complaints_edit complaint_id=complaint.id %}">Edit</a>
+            <a href="{% pluggable_url complaints_edit complaint_id=complaint.id %}">Edit</a> |
+            <a href="{% pluggable_url complaints_delete complaint_id=complaint.id %}">Delete</a>
         </p>
     </li>
 {% endfor %}

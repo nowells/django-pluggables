@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
+{% load pluggables %}
+
 {% block body_content %}
-    {% for sillywalk in sillywalks %}
-        <div class=item_container>
-            <h2><a href="{% url sillywalks_view sillywalk.name %}">{{ sillywalk.name }}</a></h2>
-            <p>{{ sillywalk.description|safe }}</p>
-        </div>
-    {% empty %}
-       <div class="item_container">No silly walks available!</div>
-    {% endfor %}
+<h1>Django Pluggable Examples</h1>
+<hr />
+<ul>
+  <li><a href="{% pluggable_url complaints_index %}">General Complaints</a></li>
+  <li><a href="{% url sillywalks_index %}">Silly Walks</a></li>
+</ul>
 {% endblock %}

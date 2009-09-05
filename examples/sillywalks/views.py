@@ -8,7 +8,7 @@ from sillywalks.models import SillyWalk
 
 def index(request):
     sillywalks = SillyWalk.objects.all()
-    return render_to_response('index.html', {
+    return render_to_response('sillywalks/index.html', {
         'sillywalks': sillywalks,
         }, context_instance=RequestContext(request))
 
@@ -17,7 +17,7 @@ def view(request, walk_name):
 
 class SillyWalkComplaints(Complaints):
     def pluggable_config(self, request, walk_name=None):
-        return {'base_template': 'view.html'}
+        return {'base_template': 'sillywalks/view.html'}
 
     def pluggable_view_context(self, request, walk_name):
         try:

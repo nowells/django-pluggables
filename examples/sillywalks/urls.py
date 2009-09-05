@@ -8,6 +8,7 @@ from sillywalks import views
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url('^$', 'django.views.generic.simple.direct_to_template', {'template': 'index.html'}, name='index'),
     url('^sillywalks/$', views.index, name='sillywalks_index'),
     url('^sillywalks/(?P<walk_name>[\w\-_]+)/$', views.view, name='sillywalks_view'),
     url('^sillywalks/(?P<walk_name>[\w\-_]+)/complaints/', include(views.complaints)),

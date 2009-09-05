@@ -19,6 +19,7 @@ class PluggableURLNode(Node):
                        for k, v in self.kwargs.items()])
 
         request = self.request.resolve(context)
+        view_name = self.view_name
         if hasattr(request, 'pluggable'):
             view_name = request.pluggable.prefix and '%s_%s' % (request.pluggable.prefix, self.view_name) or '%s' % self.view_name
             parent_args, parent_kwargs = request.pluggable.parent_arguments
