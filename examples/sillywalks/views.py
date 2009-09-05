@@ -13,7 +13,7 @@ def index(request):
         }, context_instance=RequestContext(request))
 
 def view(request, walk_name):
-    return complaints.index(request, walk_name)
+    return complaints.index(request, walk_name=walk_name)
 
 class SillyWalkComplaints(Complaints):
     def pluggable_template_context(self, request, walk_name):

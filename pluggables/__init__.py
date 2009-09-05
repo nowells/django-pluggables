@@ -71,7 +71,7 @@ class PluggableViewWrapper(object):
             except:
                 raise e
             else:
-                self.__parent_args, self.__parent_kwargs = list(args), kwargs
+                self.__parent_args, self.__parent_kwargs = args, kwargs
 
         self.__pluggable_args = list(args[len(self.__parent_args):])
         self.__pluggable_kwargs = dict([ (x[0], x[1]) for x in kwargs.items() if x[0] not in self.__parent_kwargs ])
