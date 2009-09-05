@@ -27,8 +27,17 @@
 {% endblock head %}
 
 <body>
-    {% block body_content %}
-    {% endblock %}
+    <center>
+        <div class="body_center">
+            <a href="{% url sillywalks_index %}"><div class="header"></div></a>
+            <div class="body_center_container">
+                <h1>The Ministry of <em>Silly Walks</em></h1>
+                <hr />
+                {% block body_content %}
+                {% endblock %}
+            </div>
+        </div>
+    </center>
 
     {% block js %}
     {% endblock js%}

@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block body_content %}
-<h2>Silly Walks</h2>
-<ul>
-{% for sillywalk in sillywalks %}
-   <li><a href="{% url sillywalks_view sillywalk.name %}"><strong>{{ sillywalk.name }}</strong></a> - {{ sillywalk.description }}</li>
-{% empty %}
-   <li>No silly walks available!</li>
-{% endfor %}
-</ul>
+    {% for sillywalk in sillywalks %}
+        <div class=item_container>
+            <h2><a href="{% url sillywalks_view sillywalk.name %}">{{ sillywalk.name }}</a></h2>
+            <p>{{ sillywalk.description|safe }}</p>
+        </div>
+    {% empty %}
+       <div class="item_container">No silly walks available!</div>
+    {% endfor %}
 {% endblock %}

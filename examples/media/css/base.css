@@ -11,6 +11,69 @@ a:hover {
 }
 
 body {
-    background: #789ec9 url(../img/eyeshoot1.jpg) repeat-x;
     line-height: 1.4;
+    padding: 0px;
+    margin: 0px;
+    background-color: #BFCDAA;
+}
+
+.body_center {
+    width: 800px;
+    background-color: white;
+    border-left: 1px #8B9F93 solid;
+    border-right: 1px #8B9F93 solid;
+    padding: 0px;
+    margin: 0px;
+    text-align: left;
+}
+
+.header {
+    background-image: url(../img/header.jpg);
+    width: 800px;
+    height: 323px; 
+    display:block;
+    border: 1px #8B9F93 solid;
+    border-bottom: 3px #8B9F93 solid;
+    padding: 0px;
+    margin: 0px;
+}
+
+h1 {
+    font-family: Georgia, Times, sans-serif;
+    font-size: 30px;
+    color: #6F6C7D;
+    margin: 10px 30px 10px 0px;
+    text-align: right;
+}
+
+hr {
+    color: #728B92;
+    width: 90%;
+}
+
+h2 {
+    font-family: Georgia, Times, sans-serif;
+    font-size: 24px;
+    color: #8B9F93;
+    margin: 10px 0px 20px 0px;
+}
+
+.body_center_container {
+    padding: 0px;
+    margin: 0px;
+    padding-bottom: 10px;
+}
+
+.item_container {
+    font-family: Georgia, Times, sans-serif;
+    margin:20px 20px 10px 20px;
+    color: black;
+    border: 1px #F0EFCF solid;
+    background-color: #FCFEF5;
+    padding: 20px;
+}
+
+.video_container {
+	padding-top:10px;
+    text-align: center;
 }

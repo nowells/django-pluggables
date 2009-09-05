@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
 {% block body_content %}
-    <h2>{{ sillywalk.name }}</h2>
-    <p>{{ sillywalk.description }}</p>
-    <object width="425" height="344"><param name="movie" value="{{ sillywalk.video_url }}"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="{{ sillywalk.video_url }}" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>
-    {% block pluggable_content %}{% endblock %}
+    <div class=item_container>
+        <h2>{{ sillywalk.name }}</h2>
+        <p>{{ sillywalk.description|safe }}</p>
+        <div class="video_container"><object width="425" height="344"><param name="movie" value="{{ sillywalk.video_url }}"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="{{ sillywalk.video_url }}" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object></div>
+        {% block pluggable_content %}{% endblock %}
+    </div>
 {% endblock %}
