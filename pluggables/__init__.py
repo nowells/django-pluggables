@@ -113,15 +113,28 @@ class PluggableViews(object):
                 if type(view) == list:
                     raise Exception("Pluggable applications do not support 'include(...)' url definitions.")
 
+                # Handle a view directly
                 if callable(view):
                     pattern_args[1] = pluggable_view(view, self)
+                # Handle a view_prefix combined with function name or a full view path
+                elif isinstance(view, (str, unicode)) and (view_prefix or '.' in view):
+                    view_name = view_prefix and '%s.%s' % (view_prefix, view) or view
+                    try:
+                        pattern_args[1] = pluggable_view(get_callable(view), self)
+                    except ImportError, e:
+                        mod_name, _ = get_mod_func(view)
+                        raise ViewDoesNotExist, "Could not import %s. Error was: %s" % (mod_name, str(e))
+                    except AttributeError, e:
+                        mod_name, func_name = get_mod_func(view)
+                        raise ViewDoesNotExist, "Tried %s in module %s. Error was: %s" % (func_name, mod_name, str(e))
+                # Handle class view.
                 elif isinstance(view, (str, unicode)) and hasattr(self, view):
                     # Avoid reapplying pluggable view decorator when it has aready been applied. (i.e. the same function is reused in the same configuration.
                     if not getattr(getattr(self, view), 'pluggable_unique_identifier', '') == self.pluggable_unique_identifier:
                         setattr(self, view, pluggable_class_view(getattr(self, view), self))
                     pattern_args[1] = getattr(self, view)
                 else:
-                    pattern_args[1] = pluggable_view(pluggable_placeholder, self)
+                    raise ViewDoesNotExist, 'Invalid view type. %s' % view
 
                 if 'name' in pattern_kwargs:
                     pattern_kwargs['name'] = '%s%s' % (self.pluggable_prefix and '%s_' % self.pluggable_prefix or '', pattern_kwargs['name'])
@@ -162,7 +175,7 @@ def pluggable_reverse(request, view_name, urlconf=None, args=None, kwargs=None, 
     kwargs = kwargs or {}
 
     if hasattr(request, 'pluggable'):
-        view_name = request.pluggable.pluggable_prefix and '%s_%s' % (request.pluggable.pluggable_prefix, view_name) or '%s' % view_name
+        view_name = request.pluggable.prefix and '%s_%s' % (request.pluggable.prefix, view_name) or '%s' % view_name
         parent_args, parent_kwargs = request.pluggable.parent_arguments
         if parent_args:
             args = parent_args + args
