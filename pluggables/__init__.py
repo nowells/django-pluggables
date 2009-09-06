@@ -10,7 +10,6 @@ A tool for allowing reusable apps to exist at multiple URLs within a project.
 """
 from functools import wraps
 import uuid
-import copy
 
 from django.conf import settings
 from django.conf.urls import defaults
@@ -102,13 +101,13 @@ class PluggableViewWrapper(object):
 class PluggableViews(object):
     urlpatterns = patterns('', )
 
-    def __init__(self, prefix=None):
-        self.pluggable_unique_identifier = '/@@pluggableapp@@/%s/' % str(uuid.uuid4())
-        self.pluggable_prefix = prefix
-        self.urlpatterns = copy.deepcopy(self.urlpatterns)
-        view_prefix = self.urlpatterns[0]
+    def __new__(cls, prefix=None):
+        obj = object.__new__(cls)
+        obj.pluggable_unique_identifier = '/@@pluggableapp@@/%s/' % str(uuid.uuid4())
+        obj.pluggable_prefix = prefix
+        view_prefix = cls.urlpatterns[0]
         urlpatterns = []
-        for pattern in self.urlpatterns[1:]:
+        for pattern in cls.urlpatterns[1:]:
             pattern_type, pattern_args, pattern_kwargs = pattern
             if pattern_type == 'url':
                 view = pattern_args[1]
@@ -117,12 +116,12 @@ class PluggableViews(object):
 
                 # Handle a view directly
                 if callable(view):
-                    pattern_args[1] = pluggable_view(view, self)
+                    pattern_args[1] = pluggable_view(view, obj)
                 # Handle a view_prefix combined with function name or a full view path
                 elif isinstance(view, (str, unicode)) and (view_prefix or '.' in view):
                     view_name = view_prefix and '%s.%s' % (view_prefix, view) or view
                     try:
-                        pattern_args[1] = pluggable_view(get_callable(view), self)
+                        pattern_args[1] = pluggable_view(get_callable(view), obj)
                     except ImportError, e:
                         mod_name, _ = get_mod_func(view)
                         raise ViewDoesNotExist, "Could not import %s. Error was: %s" % (mod_name, str(e))
@@ -130,24 +129,25 @@ class PluggableViews(object):
                         mod_name, func_name = get_mod_func(view)
                         raise ViewDoesNotExist, "Tried %s in module %s. Error was: %s" % (func_name, mod_name, str(e))
                 # Handle class view.
-                elif isinstance(view, (str, unicode)) and hasattr(self, view):
+                elif isinstance(view, (str, unicode)) and hasattr(obj, view):
                     # Avoid reapplying pluggable view decorator when it has aready been applied. (i.e. the same function is reused in the same configuration.
-                    if not getattr(getattr(self, view), 'pluggable_unique_identifier', '') == self.pluggable_unique_identifier:
-                        setattr(self, view, pluggable_class_view(getattr(self, view), self))
-                    pattern_args[1] = getattr(self, view)
+                    if not getattr(getattr(obj, view), 'pluggable_unique_identifier', '') == obj.pluggable_unique_identifier:
+                        setattr(obj, view, pluggable_class_view(getattr(obj, view), obj))
+                    pattern_args[1] = getattr(obj, view)
                 else:
                     raise ViewDoesNotExist, 'Invalid view type. %s' % view
 
                 if 'name' in pattern_kwargs:
-                    pattern_kwargs['name'] = '%s%s' % (self.pluggable_prefix and '%s_' % self.pluggable_prefix or '', pattern_kwargs['name'])
+                    pattern_kwargs['name'] = '%s%s' % (obj.pluggable_prefix and '%s_' % obj.pluggable_prefix or '', pattern_kwargs['name'])
 
                 urlpatterns.append(defaults.url(*pattern_args, **pattern_kwargs))
             elif pattern_type == 'include':
                 urlpatterns.append(defaults.include(*pattern_args, **pattern_kwargs))
             else:
                 raise Exception('Invalid url pattern type.')
-        urlpatterns.append(defaults.url(r'^.*%s$' % self.pluggable_unique_identifier, pluggable_placeholder, name='%s%s' % (self.pluggable_prefix and '%s_' % self.pluggable_prefix or '', self.pluggable_unique_identifier)))
-        self.urlpatterns = defaults.patterns('', *urlpatterns)
+        urlpatterns.append(defaults.url(r'^.*%s$' % obj.pluggable_unique_identifier, pluggable_placeholder, name='%s%s' % (obj.pluggable_prefix and '%s_' % obj.pluggable_prefix or '', obj.pluggable_unique_identifier)))
+        obj.urlpatterns = defaults.patterns('', *urlpatterns)
+        return obj
 
     def __iter__(self):
         return self.urlpatterns.__iter__()
