@@ -13,12 +13,12 @@ def index(request):
         'sillywalks': sillywalks,
         }, context_instance=RequestContext(request))
 
-def view(request, walk_name):
-    return complaints.index(request, walk_name=walk_name)
+def view(request, walk_slug):
+    return complaints.index(request, walk_slug=walk_slug)
 
-def edit(request, walk_name=None):
+def edit(request, walk_slug=None):
     try:
-        sillywalk = SillyWalk.objects.get(name=walk_name)
+        sillywalk = SillyWalk.objects.get(slug=walk_slug)
     except SillyWalk.DoesNotExist:
         sillywalk = None
 
@@ -26,7 +26,7 @@ def edit(request, walk_name=None):
         form = SillyWalkForm(request.POST, instance=sillywalk)
         if form.is_valid():
             sillywalk = form.save()
-            return HttpResponseRedirect(reverse('sillywalks_view', args=[sillywalk.name]))
+            return HttpResponseRedirect(reverse('sillywalks_view', args=[sillywalk.slug]))
     else:
         form = SillyWalkForm(instance=sillywalk)
 
@@ -36,17 +36,17 @@ def edit(request, walk_name=None):
         }, context_instance=RequestContext(request))
 
 class SillyWalkComplaints(Complaints):
-    def pluggable_config(self, request, walk_name=None):
+    def pluggable_config(self, request, walk_slug=None):
         return {'base_template': 'sillywalks/view.html'}
 
-    def pluggable_view_context(self, request, walk_name):
+    def pluggable_view_context(self, request, walk_slug):
         try:
-            sillywalk = SillyWalk.objects.get(name=walk_name)
+            sillywalk = SillyWalk.objects.get(slug=walk_slug)
         except SillyWalk.DoesNotExist:
             raise Http404
         return sillywalk
 
-    def pluggable_template_context(self, request, walk_name):
+    def pluggable_template_context(self, request, walk_slug):
         return {'sillywalk': request.pluggable.view_context}
 
 complaints = SillyWalkComplaints('sillywalks')

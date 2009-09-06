@@ -11,9 +11,9 @@ urlpatterns = patterns('',
     url('^$', 'django.views.generic.simple.direct_to_template', {'template': 'index.html'}, name='index'),
     url('^sillywalks/$', views.index, name='sillywalks_index'),
     url('^sillywalks/create/$', views.edit, name='sillywalks_create'),
-    url('^sillywalks/(?P<walk_name>[\w\-_]+)/$', views.view, name='sillywalks_view'),
-    url('^sillywalks/(?P<walk_name>[\w\-_]+)/edit/$', views.view, name='sillywalks_edit'),
-    url('^sillywalks/(?P<walk_name>[\w\-_]+)/complaints/', include(views.complaints)),
+    url('^sillywalks/(?P<walk_slug>[\w\-_]+)/$', views.view, name='sillywalks_view'),
+    url('^sillywalks/(?P<walk_slug>[\w\-_]+)/edit/$', views.view, name='sillywalks_edit'),
+    url('^sillywalks/(?P<walk_slug>[\w\-_]+)/complaints/', include(views.complaints)),
     url('^complaints/', include(Complaints())),
 )
 

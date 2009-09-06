@@ -1,0 +1,31 @@
+[
+    {
+        "pk": 1, 
+        "model": "sillywalks.sillywalk", 
+        "fields": {
+            "description": "Nothing is better than the original!", 
+            "slug": "ministry-of-silly-walks", 
+            "video_url": "http://www.youtube.com/v/9ZlBUglE6Hc&hl=en&fs=1", 
+            "title": "Ministry of Silly Walks"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "sillywalks.sillywalk", 
+        "fields": {
+            "description": "Silly walk thru Derry-Londonderry - a tribute to the legend, John Cleese. Music: \"Blaze Away\" Performed by the Britannia Band (L'derry).", 
+            "slug": "ministry-of-silly-walks-derry-style", 
+            "video_url": "http://www.youtube.com/v/m99n93dL5Mc&hl=en&fs=1", 
+            "title": "Ministry of Silly Walks - Derry Style!"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "complaints.complaint", 
+        "fields": {
+            "pluggable_url": "KGRwMQpTJ3ByZWZpeCcKcDIKUydzaWxseXdhbGtzJwpwMwpzUydwYXJlbnRfa3dhcmdzJwpwNAooZHA1ClMnd2Fsa19zbHVnJwpwNgpWbWluaXN0cnktb2Ytc2lsbHktd2Fsa3MtZGVycnktc3R5bGUKcDcKc3NTJ3BhcmVudF9hcmdzJwpwOAoodHMu", 
+            "name": "Nowell Strite", 
+            "description": "Nice try buddy, but nothing is as good as the original."
+        }
+    }
+]
