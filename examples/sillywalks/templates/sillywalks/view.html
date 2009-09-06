@@ -6,6 +6,7 @@
         <h2>{{ sillywalk.title }}</h2>
         <p>{{ sillywalk.description|safe }}</p>
         <div class="video_container"><object width="425" height="344"><param name="movie" value="{{ sillywalk.video_url }}"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="{{ sillywalk.video_url }}" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object></div>
+        <div><a href="{% url sillywalks_edit walk_slug=sillywalk.slug %}">Edit</a> | <a href="{% url sillywalks_delete walk_slug=sillywalk.slug %}">Delete</a></div>
         {% block pluggable_content %}{% endblock %}
     </div>
 {% endblock %}

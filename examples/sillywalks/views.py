@@ -35,6 +35,16 @@ def edit(request, walk_slug=None):
         'form': form,
         }, context_instance=RequestContext(request))
 
+def delete(request, walk_slug):
+    try:
+        sillywalk = SillyWalk.objects.get(slug=walk_slug)
+    except SillyWalk.DoesNotExist:
+        raise Http404
+
+    sillywalk.delete()
+
+    return HttpResponseRedirect(reverse('sillywalks_index'))
+
 class SillyWalkComplaints(Complaints):
     def pluggable_config(self, request, walk_slug=None):
         return {'base_template': 'sillywalks/view.html'}
