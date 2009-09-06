@@ -1,0 +1,13 @@
+{% extends "sillywalks/base.html" %}
+
+{% load uni_form %}
+
+{% block body_content %}
+{{ block.super }}
+<div class="item_container">
+    <form method="post" action="." class="uniForm">
+        {{ form|as_uni_form }}
+        <input type="submit" value="Complain" />
+    </form>
+</div>
+{% endblock %}

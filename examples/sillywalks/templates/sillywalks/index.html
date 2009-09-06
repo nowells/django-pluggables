@@ -2,6 +2,7 @@
 
 {% block body_content %}
     {{ block.super }}
+    <div><a href="{% url sillywalks_create %}">Create a New Walk</a></div>
     {% for sillywalk in sillywalks %}
         <div class=item_container>
             <h2><a href="{% url sillywalks_view sillywalk.name %}">{{ sillywalk.name }}</a></h2>
