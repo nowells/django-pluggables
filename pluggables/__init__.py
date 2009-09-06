@@ -8,6 +8,7 @@ A tool for allowing reusable apps to exist at multiple URLs within a project.
    templatetags.pluggable
 
 """
+import copy
 from functools import wraps
 import uuid
 
@@ -107,8 +108,7 @@ class PluggableViews(object):
         obj.pluggable_prefix = prefix
         view_prefix = cls.urlpatterns[0]
         urlpatterns = []
-        for pattern in cls.urlpatterns[1:]:
-            pattern_type, pattern_args, pattern_kwargs = pattern
+        for pattern_type, pattern_args, pattern_kwargs in copy.deepcopy(cls.urlpatterns[1:]):
             if pattern_type == 'url':
                 view = pattern_args[1]
                 if type(view) == list:
