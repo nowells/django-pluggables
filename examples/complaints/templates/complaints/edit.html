@@ -1,8 +1,10 @@
 {% extends base_template %}
 
+{% load uni_form %}
+
 {% block pluggable_content %}
-<form method="post" action=".">
-    {{ form.as_p }}
+<form method="post" action="." class="uniForm">
+    {{ form|as_uni_form }}
     <input type="submit" value="Complain" />
 </form>
 {% endblock %}

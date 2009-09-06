@@ -22,6 +22,8 @@
 
         {% block css %}
             <link rel="stylesheet" href="{{ MEDIA_URL }}css/base.css" type="text/css" />
+            <link rel="stylesheet" href="{{ MEDIA_URL }}uni_form/uni-form-generic.css" />
+            <link rel="stylesheet" href="{{ MEDIA_URL }}uni_form/uni-form.css" />
         {% endblock css%}
     </head>
 {% endblock head %}
@@ -42,6 +44,8 @@
     </center>
 
     {% block js %}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}uni_form/uni-form.jquery.js"></script>
     {% endblock js%}
 </body>
 </html>

@@ -8,6 +8,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.sessions',
     'django.contrib.contenttypes',
+    'uni_form',
 )
 
 import os
