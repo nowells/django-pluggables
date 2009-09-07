@@ -63,6 +63,11 @@ h3 {
     color: #451B34;
 }
 
+h4 {
+    font-size: 18px;
+    color: #225C5C;
+}
+
 .body_center_container {
     padding: 0px;
     margin: 0px;
