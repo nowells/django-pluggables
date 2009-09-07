@@ -58,6 +58,11 @@ h2 {
     margin: 10px 0px 20px 0px;
 }
 
+h3 {
+    font-size: 22px;
+    color: #451B34;
+}
+
 .body_center_container {
     padding: 0px;
     margin: 0px;
@@ -76,4 +81,26 @@ h2 {
 .video_container {
 	padding-top:10px;
     text-align: center;
+}
+
+label {
+    color: #225C5C;
+}
+
+textarea {
+    font-family: Georgia, Times, sans-serif;
+    font-size: 13px;
+    padding: 3px;
+}
+
+input[type="submit"] {
+    font-family: Georgia, Times, sans-serif;
+    font-size: 13px;
+    background-color: #3D3D4E;
+    color: white;
+
+    border: 0px;
+    margin: 5px 0px 5px 10px;
+    width: 100px;
+    height: 30px;
 }
