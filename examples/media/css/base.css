@@ -93,6 +93,13 @@ textarea {
     padding: 3px;
 }
 
+input[type="text"] {
+    font-family: Georgia, Times, sans-serif;
+    font-size: 13px;
+    width: 250px;
+    padding: 2px;
+}
+
 input[type="submit"] {
     font-family: Georgia, Times, sans-serif;
     font-size: 13px;
