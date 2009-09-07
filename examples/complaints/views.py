@@ -16,7 +16,7 @@ class Complaints(PluggableViews):
     )
 
     def index(self, request):
-        complaints = Complaint.objects.pluggable(request)
+        complaints = Complaint.objects.pluggable_object(request)
         form = ComplaintForm()
         return render_to_response(request.pluggable.config.get('template', 'complaints/index.html'), {
             'complaints': complaints,
@@ -27,7 +27,7 @@ class Complaints(PluggableViews):
     def edit(self, request, complaint_id=None):
         if complaint_id is not None:
             try:
-                complaint = Complaint.objects.pluggable(request).get(pk=complaint_id)
+                complaint = Complaint.objects.pluggable_object(request).get(pk=complaint_id)
             except Complaint.DoesNotExist:
                 raise Http404
         else:
@@ -38,6 +38,7 @@ class Complaints(PluggableViews):
             if form.is_valid():
                 complaint = form.save(commit=False)
                 complaint.set_pluggable_url(request)
+                complaint.set_pluggable_object(request)
                 complaint.save()
                 return HttpResponseRedirect(pluggable_reverse(request, 'complaints_index'))
         else:
@@ -50,7 +51,7 @@ class Complaints(PluggableViews):
 
     def delete(self, request, complaint_id):
         try:
-            complaint = Complaint.objects.pluggable(request).get(pk=complaint_id)
+            complaint = Complaint.objects.pluggable_object(request).get(pk=complaint_id)
         except Complaint.DoesNotExist:
             raise Http404
 
