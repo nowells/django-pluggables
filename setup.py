@@ -14,7 +14,7 @@ setup(
     packages=find_packages(),
     zip_safe=False,
     platforms=["any"],
-    licence='MIT',
+    license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
