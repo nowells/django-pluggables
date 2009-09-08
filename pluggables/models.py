@@ -4,9 +4,11 @@ from django.db import models
 from django.http import HttpRequest
 from pluggables.utils.picklefield import PickledObjectField
 
+
 class PluggableManager(models.Manager):
     def pluggable(self, request):
         return self.filter(pluggable_url=request.pluggable.pluggable_url_data)
+
 
 class PluggableModel(models.Model):
     pluggable_url = PickledObjectField(blank=True)
@@ -21,6 +23,7 @@ class PluggableModel(models.Model):
     class Meta:
         abstract = True
 
+
 class PluggableObjectManager(PluggableManager):
     def pluggable_object(self, request):
         if request.pluggable.view_context is None:
@@ -28,6 +31,7 @@ class PluggableObjectManager(PluggableManager):
         else:
             content_type = ContentType.objects.get_for_model(request.pluggable.view_context)
             return self.filter(pluggable_content_type=content_type, pluggable_object_id=request.pluggable.view_context.pk)
+
 
 class PluggableObjectModel(PluggableModel):
     pluggable_content_type = models.ForeignKey(ContentType, null=True, blank=True)
