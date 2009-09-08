@@ -3,7 +3,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from complaints.views import Complaints
+from complaints.views import ComplaintsApp
 from sillywalks.forms import SillyWalkForm
 from sillywalks.models import SillyWalk
 
@@ -14,7 +14,7 @@ def index(request):
         }, context_instance=RequestContext(request))
 
 def view(request, walk_slug):
-    return complaints.index(request, walk_slug=walk_slug)
+    return complaints_app.index(request, walk_slug=walk_slug)
 
 def edit(request, walk_slug=None):
     try:
@@ -45,7 +45,7 @@ def delete(request, walk_slug):
 
     return HttpResponseRedirect(reverse('sillywalks_index'))
 
-class SillyWalkComplaints(Complaints):
+class SillyWalkComplaintsApp(ComplaintsApp):
     def pluggable_config(self, request, walk_slug=None):
         return {'base_template': 'sillywalks/view.html'}
 
@@ -59,4 +59,4 @@ class SillyWalkComplaints(Complaints):
     def pluggable_template_context(self, request, walk_slug):
         return {'sillywalk': request.pluggable.view_context}
 
-complaints = SillyWalkComplaints('sillywalks')
+complaints_app = SillyWalkComplaintsApp('sillywalks')

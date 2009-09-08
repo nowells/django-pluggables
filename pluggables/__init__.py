@@ -99,7 +99,7 @@ class PluggableViewWrapper(object):
             'parent_kwargs': self.__parent_kwargs,
             }
 
-class PluggableViews(object):
+class PluggableApp(object):
     urlpatterns = patterns('', )
 
     def __new__(cls, prefix=None):
