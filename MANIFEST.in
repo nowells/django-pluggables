@@ -1,0 +1,7 @@
+include README.rst
+include LICENSE
+include AUTHORS
+include MANIFEST.in
+include REQUIREMENTS
+recursive-include docs *.py *.rst
+recursive-include examples *.py *.html *.css *.jpg *.js *.db
