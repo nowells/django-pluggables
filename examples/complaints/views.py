@@ -36,10 +36,7 @@ class Complaints(PluggableViews):
         if request.method == 'POST':
             form = ComplaintForm(request.POST, instance=complaint)
             if form.is_valid():
-                complaint = form.save(commit=False)
-                complaint.set_pluggable_url(request)
-                complaint.set_pluggable_object(request)
-                complaint.save()
+                complaint = form.save(request)
                 return HttpResponseRedirect(pluggable_reverse(request, 'complaints_index'))
         else:
             form = ComplaintForm(instance=complaint)
