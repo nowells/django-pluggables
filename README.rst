@@ -1,4 +1,4 @@
-gi###################
+###################
  Django-Pluggables
 ###################
 Django-Pluggables provides a design pattern for making reusable apps "pluggable" so that apps can exist at multiple URL locations and be presented by other apps or models.
@@ -15,7 +15,15 @@ Django-Pluggables is a design pattern that endows reusable applications with a f
 Installation
 ============
 
-Django-Pluggables can be added to your Django project like any other reusable app.
+Django-Pluggables can be added to your Django project like any other reusable app. To see the examples in action, fun the following commands:
+
+First off, the native Mac implementation of sed is not as robust as we expect. Therefore install `Super Sed <http://sed.sourceforge.net/grabbag/ssed/>`_  Then run ::
+
+   $ easy_install Fabric==0.1.1 pip virtualenv
+   $ fab bootstrap
+   $ ./examples/sillywalks/manage.py runserver
+
+Voila! You now have a fully functional site running at http://127.0.0.1:8000/
 
 Usage
 =====
