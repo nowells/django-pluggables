@@ -5,3 +5,7 @@
 docs/_build/
 ve/
 examples/db/.database.db
+dist/
+build/
+pip-log.txt
+django_pluggables.egg-info/
