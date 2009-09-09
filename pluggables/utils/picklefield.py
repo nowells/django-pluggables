@@ -13,6 +13,7 @@ except ImportError:
 from django.db import models
 from django.utils.encoding import force_unicode
 
+
 class PickledObject(str):
     """
     A subclass of string so it can be told whether a string is a pickled
@@ -27,6 +28,7 @@ class PickledObject(str):
 
     """
     pass
+
 
 def dbsafe_encode(value, compress_object=False):
     """
@@ -44,12 +46,14 @@ def dbsafe_encode(value, compress_object=False):
         value = b64encode(compress(dumps(deepcopy(value))))
     return PickledObject(value)
 
+
 def dbsafe_decode(value, compress_object=False):
     if not compress_object:
         value = loads(b64decode(value))
     else:
         value = loads(decompress(b64decode(value)))
     return value
+
 
 class PickledObjectField(models.Field):
     """

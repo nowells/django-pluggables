@@ -5,9 +5,9 @@ from django.template import RequestContext
 from complaints.forms import ComplaintForm
 from complaints.models import Complaint
 
-from pluggables import PluggableViews, url, include, patterns, pluggable_reverse
+from pluggables import PluggableApp, url, include, patterns, pluggable_reverse
 
-class Complaints(PluggableViews):
+class ComplaintsApp(PluggableApp):
     urlpatterns = patterns('',
         url(r'^$', 'index', name='complaints_index'),
         url(r'^create/$', 'edit', name='complaints_create'),

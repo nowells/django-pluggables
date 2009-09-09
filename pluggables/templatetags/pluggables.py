@@ -5,6 +5,7 @@ from django.utils.encoding import smart_str
 
 register = Library()
 
+
 class PluggableURLNode(Node):
     def __init__(self, request, view_name, args, kwargs, asvar):
         self.request = request
@@ -15,8 +16,7 @@ class PluggableURLNode(Node):
 
     def render(self, context):
         args = [arg.resolve(context) for arg in self.args]
-        kwargs = dict([(smart_str(k,'ascii'), v.resolve(context))
-                       for k, v in self.kwargs.items()])
+        kwargs = dict([(smart_str(k, 'ascii'), v.resolve(context)) for k, v in self.kwargs.items()])
 
         request = self.request.resolve(context)
         view_name = self.view_name
@@ -49,6 +49,7 @@ class PluggableURLNode(Node):
             return ''
         else:
             return url
+
 
 def pluggable_url(parser, token):
     """

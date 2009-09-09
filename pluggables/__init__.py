@@ -20,14 +20,18 @@ from django.core.exceptions import ViewDoesNotExist
 from django.http import Http404
 from django.db import models
 
+
 def patterns(*args):
     return args
+
 
 def url(*args, **kwargs):
     return 'url', list(args), kwargs,
 
+
 def include(*args, **kwargs):
     return 'include', list(args), kwargs,
+
 
 def pluggable_view(func, pluggable):
     @wraps(func)
@@ -37,6 +41,7 @@ def pluggable_view(func, pluggable):
         return func(request, *pluggable_args, **pluggable_kwargs)
     view_wrapper.pluggable_unique_identifier = pluggable.pluggable_unique_identifier
     return view_wrapper
+
 
 def pluggable_class_view(func, pluggable):
     @wraps(func)
@@ -48,8 +53,10 @@ def pluggable_class_view(func, pluggable):
     class_view_wrapper.pluggable_unique_identifier = pluggable.pluggable_unique_identifier
     return class_view_wrapper
 
+
 def pluggable_placeholder(*args, **kwargs):
     raise Http404
+
 
 class PluggableViewWrapper(object):
     def __init__(self, pluggable_object, request, *args, **kwargs):
@@ -75,7 +82,7 @@ class PluggableViewWrapper(object):
                 self.__parent_args, self.__parent_kwargs = args, kwargs
 
         self.__pluggable_args = list(args[len(self.__parent_args):])
-        self.__pluggable_kwargs = dict([ (x[0], x[1]) for x in kwargs.items() if x[0] not in self.__parent_kwargs ])
+        self.__pluggable_kwargs = dict([(x[0], x[1]) for x in kwargs.items() if x[0] not in self.__parent_kwargs])
 
     def pluggable_initialize(self, request):
         # We seperate this out into its own function call so that each step has access to "request.pluggable" and the prior generated context.
@@ -99,7 +106,8 @@ class PluggableViewWrapper(object):
             'parent_kwargs': self.__parent_kwargs,
             }
 
-class PluggableViews(object):
+
+class PluggableApp(object):
     urlpatterns = patterns('', )
 
     def __new__(cls, prefix=None):
@@ -124,10 +132,10 @@ class PluggableViews(object):
                         pattern_args[1] = pluggable_view(get_callable(view), obj)
                     except ImportError, e:
                         mod_name, _ = get_mod_func(view)
-                        raise ViewDoesNotExist, "Could not import %s. Error was: %s" % (mod_name, str(e))
+                        raise ViewDoesNotExist("Could not import %s. Error was: %s" % (mod_name, str(e)))
                     except AttributeError, e:
                         mod_name, func_name = get_mod_func(view)
-                        raise ViewDoesNotExist, "Tried %s in module %s. Error was: %s" % (func_name, mod_name, str(e))
+                        raise ViewDoesNotExist("Tried %s in module %s. Error was: %s" % (func_name, mod_name, str(e)))
                 # Handle class view.
                 elif isinstance(view, (str, unicode)) and hasattr(obj, view):
                     # Avoid reapplying pluggable view decorator when it has aready been applied. (i.e. the same function is reused in the same configuration.
@@ -135,7 +143,7 @@ class PluggableViews(object):
                         setattr(obj, view, pluggable_class_view(getattr(obj, view), obj))
                     pattern_args[1] = getattr(obj, view)
                 else:
-                    raise ViewDoesNotExist, 'Invalid view type. %s' % view
+                    raise ViewDoesNotExist('Invalid view type. %s' % view)
 
                 if 'name' in pattern_kwargs:
                     pattern_kwargs['name'] = '%s%s' % (obj.pluggable_prefix and '%s_' % obj.pluggable_prefix or '', pattern_kwargs['name'])
@@ -167,10 +175,12 @@ class PluggableViews(object):
     def pluggable_config(self, request, *args, **kwargs):
         return {}
 
+
 def pluggable_context_processor(request):
     if hasattr(request, 'pluggable'):
         return request.pluggable.template_context
     return {}
+
 
 def pluggable_reverse(request, view_name, urlconf=None, args=None, kwargs=None, prefix=None):
     args = args or []
@@ -186,6 +196,7 @@ def pluggable_reverse(request, view_name, urlconf=None, args=None, kwargs=None, 
             kwargs.update(parent_kwargs)
 
     return reverse(view_name, urlconf, args, kwargs, prefix)
+
 
 def permalink(func):
     """

@@ -28,7 +28,7 @@ def bootstrap():
     local("rm -Rf build/")
 
     # Add local src folders to python path.
-    local("echo '%s' >> .ve~/lib/%s/site-packages/easy-install.pth" % ('\n'.join([ os.path.join(PROJECT_ROOT, x) for x in LOCAL_PACKAGES ])), PY_VERSION)
+    local("echo '%s' >> .ve~/lib/%s/site-packages/easy-install.pth" % ('\n'.join([ os.path.join(PROJECT_ROOT, x) for x in LOCAL_PACKAGES ]), PY_VERSION))
 
     # Apply patches.
     for patch in glob.glob(os.path.join(PROJECT_ROOT, 'dist', 'patches', '*.patch')):

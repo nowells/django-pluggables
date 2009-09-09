@@ -53,7 +53,7 @@ Defining the URLconf
 --------------------
 In order to make the ``complaints`` app pluggable, we first must define a pluggable URLs file for it::
 
-    class ComplaintsPluggable(PluggableViews):
+    class ComplaintsPluggable(PluggableApp):
         urlpatterns = patterns('',
             url(r'^$', 'complaints.views.view_complaint', name='complaints_view_complaint'),
             url(r'^activity_feed/$', 'complaints.views.submit_complaint', name='complaints_submit_complaint'),
