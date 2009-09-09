@@ -1,7 +1,7 @@
 gi###################
  Django-Pluggables
 ###################
-A design pattern for making reusable apps "pluggable".
+Django-Pluggables provides a design pattern for making reusable apps "pluggable" so that apps can exist at multiple URL locations and be presented by other apps or models.
 
 Overview
 ========
