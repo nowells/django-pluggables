@@ -13,12 +13,16 @@ from functools import wraps
 import uuid
 
 from django.conf import settings
-from django.conf.urls import defaults
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import resolve, reverse, RegexURLPattern, get_callable, get_mod_func, Resolver404
 from django.core.exceptions import ViewDoesNotExist
 from django.http import Http404
 from django.db import models
+
+try:
+    from django.conf import urls
+except ImportError:
+    from django.conf.urls import defaults as urls
 
 
 def patterns(*args):
@@ -148,13 +152,13 @@ class PluggableApp(object):
                 if 'name' in pattern_kwargs:
                     pattern_kwargs['name'] = '%s%s' % (obj.pluggable_prefix and '%s_' % obj.pluggable_prefix or '', pattern_kwargs['name'])
 
-                urlpatterns.append(defaults.url(*pattern_args, **pattern_kwargs))
+                urlpatterns.append(urls.url(*pattern_args, **pattern_kwargs))
             elif pattern_type == 'include':
-                urlpatterns.append(defaults.include(*pattern_args, **pattern_kwargs))
+                urlpatterns.append(urls.include(*pattern_args, **pattern_kwargs))
             else:
                 raise Exception('Invalid url pattern type.')
-        urlpatterns.append(defaults.url(r'^.*%s$' % obj.pluggable_unique_identifier, pluggable_placeholder, name='%s%s' % (obj.pluggable_prefix and '%s_' % obj.pluggable_prefix or '', obj.pluggable_unique_identifier)))
-        obj.urlpatterns = defaults.patterns('', *urlpatterns)
+        urlpatterns.append(urls.url(r'^.*%s$' % obj.pluggable_unique_identifier, pluggable_placeholder, name='%s%s' % (obj.pluggable_prefix and '%s_' % obj.pluggable_prefix or '', obj.pluggable_unique_identifier)))
+        obj.urlpatterns = urls.patterns('', *urlpatterns)
         return obj
 
     def __iter__(self):
