@@ -9,24 +9,17 @@ A tool for allowing reusable apps to exist at multiple URLs within a project.
 
 """
 import copy
-from functools import wraps
 import uuid
+from functools import wraps
 
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import resolve, reverse, RegexURLPattern, get_callable, get_mod_func, Resolver404
+from django.conf import urls
 from django.core.exceptions import ViewDoesNotExist
+from django.core.urlresolvers import (Resolver404,
+                                      get_callable, get_mod_func, resolve,
+                                      reverse)
 from django.http import Http404
-from django.db import models
-
-try:
-    from django.conf import urls
-except ImportError:
-    from django.conf.urls import defaults as urls
-
-
-def patterns(*args):
-    return args
+from django.utils import six
+from django.utils.encoding import force_text
 
 
 def url(*args, **kwargs):
@@ -38,23 +31,35 @@ def include(*args, **kwargs):
 
 
 def pluggable_view(func, pluggable):
+
     @wraps(func)
     def view_wrapper(request, *args, **kwargs):
-        request.pluggable = PluggableViewWrapper(pluggable, request, *args, **kwargs)
-        pluggable_args, pluggable_kwargs = request.pluggable.pluggable_arguments
+        request.pluggable = PluggableViewWrapper(
+            pluggable, request, *args, **kwargs
+        )
+        pluggable_args, pluggable_kwargs = \
+            request.pluggable.pluggable_arguments
         return func(request, *pluggable_args, **pluggable_kwargs)
-    view_wrapper.pluggable_unique_identifier = pluggable.pluggable_unique_identifier
+
+    view_wrapper.pluggable_unique_identifier = \
+        pluggable.pluggable_unique_identifier
     return view_wrapper
 
 
 def pluggable_class_view(func, pluggable):
+
     @wraps(func)
     def class_view_wrapper(request, *args, **kwargs):
-        request.pluggable = PluggableViewWrapper(pluggable, request, *args, **kwargs)
+        request.pluggable = PluggableViewWrapper(
+            pluggable, request, *args, **kwargs
+        )
         request.pluggable.pluggable_initialize(request)
-        pluggable_args, pluggable_kwargs = request.pluggable.pluggable_arguments
+        pluggable_args, pluggable_kwargs = \
+            request.pluggable.pluggable_arguments
         return func(request, *pluggable_args, **pluggable_kwargs)
-    class_view_wrapper.pluggable_unique_identifier = pluggable.pluggable_unique_identifier
+
+    class_view_wrapper.pluggable_unique_identifier = \
+        pluggable.pluggable_unique_identifier
     return class_view_wrapper
 
 
@@ -75,24 +80,43 @@ class PluggableViewWrapper(object):
 
         # Parent and Pluggable function args/kwargs.
         try:
-            _, self.__parent_args, self.__parent_kwargs = resolve('%s%s' % (request.path_info, self.__pluggable_object.pluggable_unique_identifier))
-        except Resolver404, e:
-            # Try and catch when the parent application is calling a class based view directly
+            _, self.__parent_args, self.__parent_kwargs = resolve(
+                '{}{}'.format(
+                    request.path_info,
+                    self.__pluggable_object.pluggable_unique_identifier
+                )
+            )
+        except Resolver404:
+            # Try and catch when the parent application is calling a class
+            # based view directly
             try:
-                reverse('%s%s' % (self.prefix and '%s_' % self.prefix or '', self.__pluggable_object.pluggable_unique_identifier), args=args, kwargs=kwargs)
+                reverse('{}{}'.format(
+                    '{}_'.format(self.prefix) if self.prefix else '',
+                    self.__pluggable_object.pluggable_unique_identifier
+                ), args=args, kwargs=kwargs)
             except:
-                raise e
+                raise
             else:
                 self.__parent_args, self.__parent_kwargs = args, kwargs
 
         self.__pluggable_args = list(args[len(self.__parent_args):])
-        self.__pluggable_kwargs = dict([(x[0], x[1]) for x in kwargs.items() if x[0] not in self.__parent_kwargs])
+        self.__pluggable_kwargs = {
+            k: v for k, v in kwargs.items() if k not in self.__parent_kwargs
+        }
 
     def pluggable_initialize(self, request):
-        # We seperate this out into its own function call so that each step has access to "request.pluggable" and the prior generated context.
-        self.config = self.__pluggable_object.pluggable_config(request, *self.__parent_args, **self.__parent_kwargs)
-        self.view_context = self.__pluggable_object.pluggable_view_context(request, *self.__parent_args, **self.__parent_kwargs)
-        self.template_context = self.__pluggable_object.pluggable_template_context(request, *self.__parent_args, **self.__parent_kwargs)
+        # We seperate this out into its own function call so that each step
+        # has access to "request.pluggable" and the prior generated context.
+        self.config = self.__pluggable_object.pluggable_config(
+            request, *self.__parent_args, **self.__parent_kwargs
+        )
+        self.view_context = self.__pluggable_object.pluggable_view_context(
+            request, *self.__parent_args, **self.__parent_kwargs
+        )
+        self.template_context = \
+            self.__pluggable_object.pluggable_template_context(
+                request, *self.__parent_args, **self.__parent_kwargs
+            )
 
     @property
     def pluggable_arguments(self):
@@ -112,53 +136,91 @@ class PluggableViewWrapper(object):
 
 
 class PluggableApp(object):
-    urlpatterns = patterns('', )
+    urlpatterns = []
 
     def __new__(cls, prefix=None):
         obj = object.__new__(cls)
-        obj.pluggable_unique_identifier = '/@@pluggableapp@@/%s/' % str(uuid.uuid4())
+        obj.pluggable_unique_identifier = '/@@pluggableapp@@/{}/'.format(
+            force_text(uuid.uuid4())
+        )
         obj.pluggable_prefix = prefix
-        view_prefix = cls.urlpatterns[0]
         urlpatterns = []
-        for pattern_type, pattern_args, pattern_kwargs in copy.deepcopy(cls.urlpatterns[1:]):
+        for pattern_type, pattern_args, pattern_kwargs in copy.deepcopy(
+                cls.urlpatterns):
             if pattern_type == 'url':
                 view = pattern_args[1]
                 if type(view) == list:
-                    raise Exception("Pluggable applications do not support 'include(...)' url definitions.")
+                    raise Exception(
+                        "Pluggable applications do not support 'include(...)' "
+                        "url definitions."
+                    )
 
                 # Handle a view directly
                 if callable(view):
                     pattern_args[1] = pluggable_view(view, obj)
-                # Handle a view_prefix combined with function name or a full view path
-                elif isinstance(view, (str, unicode)) and (view_prefix or '.' in view):
-                    view_name = view_prefix and '%s.%s' % (view_prefix, view) or view
+                # Handle a view_prefix combined with function name or a full
+                # view path
+                elif isinstance(view, six.string_types) and '.' in view:
                     try:
-                        pattern_args[1] = pluggable_view(get_callable(view), obj)
-                    except ImportError, e:
+                        pattern_args[1] = pluggable_view(
+                            get_callable(view), obj
+                        )
+                    except ImportError as e:
                         mod_name, _ = get_mod_func(view)
-                        raise ViewDoesNotExist("Could not import %s. Error was: %s" % (mod_name, str(e)))
-                    except AttributeError, e:
+                        raise ViewDoesNotExist(
+                            'Could not import {}. Error was: {}'.format(
+                                mod_name, force_text(e)
+                            )
+                        )
+                    except AttributeError as e:
                         mod_name, func_name = get_mod_func(view)
-                        raise ViewDoesNotExist("Tried %s in module %s. Error was: %s" % (func_name, mod_name, str(e)))
+                        raise ViewDoesNotExist(
+                            'Tried {} in module {}. Error was: {}'.format(
+                                func_name, mod_name, force_text(e)
+                            )
+                        )
                 # Handle class view.
-                elif isinstance(view, (str, unicode)) and hasattr(obj, view):
-                    # Avoid reapplying pluggable view decorator when it has aready been applied. (i.e. the same function is reused in the same configuration.
-                    if not getattr(getattr(obj, view), 'pluggable_unique_identifier', '') == obj.pluggable_unique_identifier:
-                        setattr(obj, view, pluggable_class_view(getattr(obj, view), obj))
+                elif isinstance(view, six.string_types) and hasattr(obj, view):
+                    # Avoid reapplying pluggable view decorator when it has
+                    # aready been applied. (i.e. the same function is reused
+                    # in the same configuration.
+                    pluggable_unique_identifier = getattr(
+                        getattr(obj, view), 'pluggable_unique_identifier', ''
+                    )
+                    if not pluggable_unique_identifier == \
+                            obj.pluggable_unique_identifier:
+                        setattr(
+                            obj, view,
+                            pluggable_class_view(getattr(obj, view), obj)
+                        )
                     pattern_args[1] = getattr(obj, view)
                 else:
                     raise ViewDoesNotExist('Invalid view type. %s' % view)
 
                 if 'name' in pattern_kwargs:
-                    pattern_kwargs['name'] = '%s%s' % (obj.pluggable_prefix and '%s_' % obj.pluggable_prefix or '', pattern_kwargs['name'])
+                    pattern_kwargs['name'] = '{}{}'.format(
+                        '{}_'.format(obj.pluggable_prefix) if
+                        obj.pluggable_prefix else '',
+                        pattern_kwargs['name']
+                    )
 
                 urlpatterns.append(urls.url(*pattern_args, **pattern_kwargs))
             elif pattern_type == 'include':
-                urlpatterns.append(urls.include(*pattern_args, **pattern_kwargs))
+                urlpatterns.append(urls.include(
+                    *pattern_args, **pattern_kwargs
+                ))
             else:
                 raise Exception('Invalid url pattern type.')
-        urlpatterns.append(urls.url(r'^.*%s$' % obj.pluggable_unique_identifier, pluggable_placeholder, name='%s%s' % (obj.pluggable_prefix and '%s_' % obj.pluggable_prefix or '', obj.pluggable_unique_identifier)))
-        obj.urlpatterns = urls.patterns('', *urlpatterns)
+        urlpatterns.append(urls.url(
+            r'^.*{}$'.format(obj.pluggable_unique_identifier),
+            pluggable_placeholder,
+            name='{}{}'.format(
+                '{}_'.format(obj.pluggable_prefix) if
+                obj.pluggable_prefix else '',
+                obj.pluggable_unique_identifier
+            )
+        ))
+        obj.urlpatterns = urlpatterns
         return obj
 
     def __iter__(self):
@@ -186,12 +248,14 @@ def pluggable_context_processor(request):
     return {}
 
 
-def pluggable_reverse(request, view_name, urlconf=None, args=None, kwargs=None, prefix=None):
+def pluggable_reverse(
+        request, view_name, urlconf=None, args=None, kwargs=None, prefix=None):
     args = args or []
     kwargs = kwargs or {}
 
     if hasattr(request, 'pluggable'):
-        view_name = request.pluggable.prefix and '%s_%s' % (request.pluggable.prefix, view_name) or '%s' % view_name
+        view_name = '{}_{}'.format(request.pluggable.prefix, view_name) if \
+            request.pluggable_prefix else view_name
         parent_args, parent_kwargs = request.pluggable.parent_arguments
         if parent_args:
             args = parent_args + args
@@ -213,11 +277,15 @@ def permalink(func):
         (viewname, viewargs, viewkwargs)
     """
     from django.core.urlresolvers import reverse
+
     def inner(self, *args, **kwargs):
         bits = func(self, *args, **kwargs)
         if isinstance(self.pluggable_url, dict):
             view_name_prefix = self.pluggable_url.get('prefix', '')
-            view_name = '%s%s' % (view_name_prefix and ('%s_' % view_name_prefix) or '', bits[0])
+            view_name = '{}{}'.format(
+                '{}_'.format(view_name_prefix) if view_name_prefix else '',
+                bits[0]
+            )
             parent_args = self.pluggable_url.get('parent_args', [])
             parent_kwargs = self.pluggable_url.get('parent_kwargs', {})
             if len(bits) >= 2 and bits[1]:
