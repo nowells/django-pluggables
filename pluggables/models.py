@@ -1,5 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.http import HttpRequest
 from pluggables.utils.picklefield import PickledObjectField
@@ -37,7 +37,7 @@ class PluggableObjectModel(PluggableModel):
     pluggable_content_type = models.ForeignKey(ContentType, null=True, blank=True)
     pluggable_object_id = models.PositiveIntegerField(null=True, blank=True)
 
-    pluggable_object = generic.GenericForeignKey(fk_field='pluggable_object_id', ct_field='pluggable_content_type')
+    pluggable_object = GenericForeignKey(fk_field='pluggable_object_id', ct_field='pluggable_content_type')
 
     objects = PluggableObjectManager()
 
